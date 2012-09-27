@@ -1,0 +1,5 @@
+C:\dev\Baylee\SocialExchange\SocialExchange\obj\Debug\SocialExchange.csprojResolveAssemblyReference.cache
+C:\dev\Baylee\SocialExchange\SocialExchange\bin\Debug\SocialExchange.dll
+C:\dev\Baylee\SocialExchange\SocialExchange\bin\Debug\SocialExchange.pdb
+C:\dev\Baylee\SocialExchange\SocialExchange\obj\Debug\SocialExchange.dll
+C:\dev\Baylee\SocialExchange\SocialExchange\obj\Debug\SocialExchange.pdb
