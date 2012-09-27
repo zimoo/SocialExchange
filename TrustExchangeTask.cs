@@ -5,15 +5,16 @@ using System.Text;
 
 namespace SocialExchange
 {
-    public abstract class Round : ITimestamped
+    public class TrustExchangeTask : ITimestamped
     {
-        public Persona Persona { get; protected set; }
+        public List<TrustExchangeRound> Rounds { get; protected set; }
+
         public DateTime BeginTimestamp { get; protected set; }
         public DateTime EndTimestamp { get; protected set; }
 
-        public Round(Persona persona)
+        public TrustExchangeTask()
         {
-            Persona = persona;
+            Rounds = new List<TrustExchangeRound>();
         }
 
         public DateTime Begin()
