@@ -12,9 +12,20 @@ namespace SocialExchange
         public DateTime BeginTimestamp { get; protected set; }
         public DateTime EndTimestamp { get; protected set; }
 
-        public TrustExchangeTask()
+        public int RoundCount { get; protected set; }
+        public int CurrentRoundIndex { get; protected set; }
+        public TrustExchangeRound CurrentRound { get { return Rounds[CurrentRoundIndex] ;} }
+
+        public TrustExchangeTask(
+            List<TrustExchangeRound> rounds
+            )
         {
-            Rounds = new List<TrustExchangeRound>();
+            Rounds = rounds;
+            Rounds.TrimExcess();
+
+            RoundCount = rounds.Count;
+
+            CurrentRoundIndex = -1;
         }
 
         public DateTime Begin()
@@ -25,6 +36,18 @@ namespace SocialExchange
         public DateTime End()
         {
             return EndTimestamp = DateTime.Now;
+        }
+
+        public TrustExchangeRound Advance()
+        {
+            CurrentRoundIndex++;
+
+            if (CurrentRoundIndex >= Rounds.Count)
+            {
+                throw new InvalidOperationException("Cannot advance past last round.");
+            }
+
+            return CurrentRound;
         }
     }
 }
