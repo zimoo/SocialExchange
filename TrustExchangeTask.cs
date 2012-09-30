@@ -15,17 +15,19 @@ namespace SocialExchange
         public int RoundCount { get; protected set; }
         public int CurrentRoundIndex { get; protected set; }
         public TrustExchangeRound CurrentRound { get { return Rounds[CurrentRoundIndex] ;} }
+        public Action<List<TrustExchangeRound>,TrustExchangeRound> PersonaTrustExchangeLogic { get; protected set; }
 
         public TrustExchangeTask(
-            List<TrustExchangeRound> rounds
+            List<TrustExchangeRound> rounds, 
+            Action<List<TrustExchangeRound>, TrustExchangeRound> personaTrustExchangeLogic
             )
         {
             Rounds = rounds;
             Rounds.TrimExcess();
-
             RoundCount = rounds.Count;
+            CurrentRoundIndex = 0;
 
-            CurrentRoundIndex = -1;
+            PersonaTrustExchangeLogic = personaTrustExchangeLogic;
         }
 
         public DateTime Begin()
@@ -48,6 +50,11 @@ namespace SocialExchange
             }
 
             return CurrentRound;
+        }
+
+        public void TriggerPersonaResponse()
+        {
+            PersonaTrustExchangeLogic(Rounds, CurrentRound);
         }
     }
 }

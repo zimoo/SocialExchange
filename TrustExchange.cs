@@ -7,15 +7,25 @@ namespace SocialExchange
 {
     public class TrustExchange
     {
-        public int RawPointsGiven { get; set; }
-        public int RawPointsReceived { get; set; }
+        public int PlayerToPersonaRawPoints { get; protected set; }
+        public int PersonaToPlayerRawPoints { get; protected set; }
         public PersonaClassification PersonaClassification { get; set; }
 
         public TrustExchange()
         {
-            RawPointsGiven = 0;
-            RawPointsReceived = 0;
+            PlayerToPersonaRawPoints = 0;
+            PersonaToPlayerRawPoints = 0;
             PersonaClassification = PersonaClassifications.UNINITIALIZED;
+        }
+
+        public int PlayerGivesPoint()
+        {
+            return (PlayerToPersonaRawPoints++);
+        }
+
+        public int PersonaGivesPoint()
+        {
+            return (PersonaToPlayerRawPoints++);
         }
     }
 }

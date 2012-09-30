@@ -1,0 +1,7 @@
+C:\dev\Baylee\SocialExchange\SocialExchange\SocialExchangeConsole\obj\Debug\SocialExchangeConsole.csprojResolveAssemblyReference.cache
+C:\dev\Baylee\SocialExchange\SocialExchange\SocialExchangeConsole\bin\Debug\SocialExchangeConsole.exe
+C:\dev\Baylee\SocialExchange\SocialExchange\SocialExchangeConsole\bin\Debug\SocialExchangeConsole.pdb
+C:\dev\Baylee\SocialExchange\SocialExchange\SocialExchangeConsole\bin\Debug\SocialExchange.dll
+C:\dev\Baylee\SocialExchange\SocialExchange\SocialExchangeConsole\bin\Debug\SocialExchange.pdb
+C:\dev\Baylee\SocialExchange\SocialExchange\SocialExchangeConsole\obj\Debug\SocialExchangeConsole.exe
+C:\dev\Baylee\SocialExchange\SocialExchange\SocialExchangeConsole\obj\Debug\SocialExchangeConsole.pdb

@@ -7,11 +7,26 @@ namespace SocialExchange
 {
     public class TrustExchangeRound : Round
     {
-        public TrustExchange TrustExchange { get; protected set; }
+        protected TrustExchange TrustExchange { get; set; }
 
-        public TrustExchangeRound(Persona persona, TrustExchange trustExchange) : base(persona)
+        public TrustExchangeRound(Persona persona) : base(persona)
         {
-            TrustExchange = trustExchange;
+            TrustExchange = new TrustExchange();
+        }
+
+        public int PlayerGivesPoint()
+        {
+            return TrustExchange.PlayerGivesPoint();
+        }
+
+        public int PersonaGivesPoint()
+        {
+            return TrustExchange.PersonaGivesPoint();
+        }
+
+        public void SetOutcome(PersonaClassification personaClassification)
+        {
+            TrustExchange.PersonaClassification = personaClassification;
         }
     }
 }
