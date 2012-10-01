@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SocialExchange
 {
-    public class TrustExchangeTask : ITimestamped
+    public class TrustExchangeTask /*: ITimestamped*/
     {
         public List<TrustExchangeRound> Rounds { get; protected set; }
 
@@ -14,7 +14,20 @@ namespace SocialExchange
 
         public int RoundCount { get; protected set; }
         public int CurrentRoundIndex { get; protected set; }
-        public TrustExchangeRound CurrentRound { get { return Rounds[CurrentRoundIndex] ;} }
+        public TrustExchangeRound CurrentRound 
+        { 
+            get 
+            { 
+                BeginTimestamp = 
+                    BeginTimestamp == default(DateTime) ? 
+                    DateTime.Now : 
+                    BeginTimestamp; 
+
+                return 
+                    Rounds[CurrentRoundIndex];
+            } 
+        }
+
         public Action<List<TrustExchangeRound>,TrustExchangeRound> PersonaTrustExchangeLogic { get; protected set; }
 
         public TrustExchangeTask(
@@ -30,23 +43,17 @@ namespace SocialExchange
             PersonaTrustExchangeLogic = personaTrustExchangeLogic;
         }
 
-        public DateTime Begin()
-        {
-            return BeginTimestamp = DateTime.Now;
-        }
-
-        public DateTime End()
-        {
-            return EndTimestamp = DateTime.Now;
-        }
-
         public TrustExchangeRound Advance()
         {
-            CurrentRoundIndex++;
+            int nextRountIndex = CurrentRoundIndex + 1;
 
-            if (CurrentRoundIndex >= Rounds.Count)
+            if (nextRountIndex >= Rounds.Count)
             {
-                throw new InvalidOperationException("Cannot advance past last round.");
+                throw new InvalidOperationException("Cannot advance past final round.");
+            }
+            else
+            {
+                CurrentRoundIndex++;
             }
 
             return CurrentRound;
@@ -55,6 +62,16 @@ namespace SocialExchange
         public void TriggerPersonaResponse()
         {
             PersonaTrustExchangeLogic(Rounds, CurrentRound);
+
+            EndTimestamp =
+                CurrentRoundIndex == Rounds.Count - 1 ?
+                DateTime.Now :
+                default(DateTime);
+        }
+
+        public PersonaClassification PlayerGivesPoint()
+        {
+            throw new NotImplementedException();
         }
     }
 }

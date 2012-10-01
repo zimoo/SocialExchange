@@ -12,46 +12,48 @@ namespace SocialExchangeConsole
     {
         public static int trustExchangeRoundCount = 24;
         public static bool logicEngineIsRunning = true;
-        public static LogicEngine logicEngine = new LogicEngine(trustExchangeRoundCount);
+        public static LogicEngine LogicEngine = new LogicEngine(trustExchangeRoundCount);
 
         static void Main(string[] args)
         {
-            RunInteractive();
+            RunTrustExchangeTask();
         }
 
-        private static void RunInteractive()
+        private static void RunTrustExchangeTask()
         {
-            while(logicEngineIsRunning)
+            while(LogicEngine.TrustExchangeTask.EndTimestamp == default(DateTime))
             {
-                OutputCurrentRoundInfo();
-                PromptPlayerToGivePoint();
-                if(PlayerGivesPoint())
-                {
-                    logicEngine.TrustExchangeTask.CurrentRound.PlayerGivesPoint();
-                }
-                TriggerPersonaResponse();
+                InTrustExchangeTaskOutputCurrentRoundInfo();
+                InTrustExchangeTaskPromptPlayerToGivePoint();
+                InTrustExchangeTaskProcessPlayerGivesPointInput();
+                //InTrustExchangeTaskTriggerPersonaResponse();
             }
         }
 
-        private static void TriggerPersonaResponse()
+        //private static void InTrustExchangeTaskTriggerPersonaResponse()
+        //{
+        //    LogicEngine.TrustExchangeTask.TriggerPersonaResponse();
+        //}
+
+        private static void InTrustExchangeTaskOutputCurrentRoundInfo()
         {
-            logicEngine.TrustExchangeTask.TriggerPersonaResponse();
+            Console.WriteLine(string.Format("ROUND {0} / {1}:", LogicEngine.TrustExchangeTask.CurrentRoundIndex, trustExchangeRoundCount));
+            Console.WriteLine(string.Format("PERSONA: {0}", LogicEngine.TrustExchangeTask.CurrentRound.Persona.Filename));
         }
 
-        private static void OutputCurrentRoundInfo()
-        {
-            Console.WriteLine(string.Format("ROUND {0} / {1}:", logicEngine.TrustExchangeTask.CurrentRoundIndex, trustExchangeRoundCount));
-            Console.WriteLine(string.Format("PERSONA: {0}", logicEngine.TrustExchangeTask.CurrentRound.Persona.Filename));
-        }
-
-        private static void PromptPlayerToGivePoint()
+        private static void InTrustExchangeTaskPromptPlayerToGivePoint()
         {
             Console.Write("Give points? (Y/N) ");
         }
 
-        private static bool PlayerGivesPoint()
+        private static void InTrustExchangeTaskProcessPlayerGivesPointInput()
         {
-            return Console.In.ReadToEnd().StartsWith("Y", true, CultureInfo.InvariantCulture);
+            bool playerGivesPoint = Console.In.ReadToEnd().StartsWith("Y", true, CultureInfo.InvariantCulture);
+
+            if(playerGivesPoint)
+            {
+                LogicEngine.TrustExchangeTask.PlayerGivesPoint();
+            }
         }
     }
 }
