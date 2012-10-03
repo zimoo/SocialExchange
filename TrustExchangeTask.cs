@@ -28,11 +28,11 @@ namespace SocialExchange
             } 
         }
 
-        public Action<List<TrustExchangeRound>,TrustExchangeRound> PersonaTrustExchangeLogic { get; protected set; }
+        public Func<List<TrustExchangeRound>, TrustExchangeRound, PersonaClassification> PersonaTrustExchangeLogic { get; protected set; }
 
         public TrustExchangeTask(
-            List<TrustExchangeRound> rounds, 
-            Action<List<TrustExchangeRound>, TrustExchangeRound> personaTrustExchangeLogic
+            List<TrustExchangeRound> rounds,
+            Func<List<TrustExchangeRound>, TrustExchangeRound, PersonaClassification> personaTrustExchangeLogic
             )
         {
             Rounds = rounds;
@@ -43,7 +43,7 @@ namespace SocialExchange
             PersonaTrustExchangeLogic = personaTrustExchangeLogic;
         }
 
-        public TrustExchangeRound Advance()
+        protected TrustExchangeRound Advance()
         {
             int nextRountIndex = CurrentRoundIndex + 1;
 
@@ -59,19 +59,22 @@ namespace SocialExchange
             return CurrentRound;
         }
 
-        public void TriggerPersonaResponse()
+        protected PersonaClassification TriggerPersonaResponse()
         {
-            PersonaTrustExchangeLogic(Rounds, CurrentRound);
-
             EndTimestamp =
                 CurrentRoundIndex == Rounds.Count - 1 ?
                 DateTime.Now :
                 default(DateTime);
+
+            return 
+                PersonaTrustExchangeLogic(Rounds, CurrentRound);
         }
 
         public PersonaClassification PlayerGivesPoint()
         {
-            throw new NotImplementedException();
+            CurrentRound.PlayerGivesPoint();
+
+            return TriggerPersonaResponse();
         }
     }
 }

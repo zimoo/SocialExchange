@@ -11,18 +11,12 @@ namespace SocialExchange
     public class LogicEngine
     {
         public List<Persona> Personas { get; protected set; }
-
-        public int TrustExchangeRoundCount { get; protected set; }
         public TrustExchangeTask TrustExchangeTask { get; protected set; }
-        public Action<List<TrustExchangeRound>, TrustExchangeRound> TrustExchangePersonaResponseLogic { get; protected set; }
 
         public LogicEngine(int trustExchangeRoundCount)
         {
-            TrustExchangeRoundCount = trustExchangeRoundCount;
-
             InitializePersonas();
-
-            InitializeTrustExchange();
+            InitializeTrustExchange(trustExchangeRoundCount);
         }
 
         private void InitializeTrustExchangePersonaResponseLogic()
@@ -48,30 +42,31 @@ namespace SocialExchange
                 .ToList();
         }
 
-        private void InitializeTrustExchange()
+        private void InitializeTrustExchange(int roundCount)
         {
-            List<TrustExchangeRound> trustExchangeRounds = new List<TrustExchangeRound>();
+            List<TrustExchangeRound> trustExchangeRounds = new List<TrustExchangeRound>(roundCount);
 
             Random random = new Random();
-            while(trustExchangeRounds.Count < TrustExchangeRoundCount)
+            while (trustExchangeRounds.Count < roundCount)
             {
-                Persona roundPersonaCandidate = Personas[random.Next(0, TrustExchangeRoundCount)];
+                Persona roundPersonaCandidate = Personas[random.Next(0, roundCount)];
                 if (!trustExchangeRounds.Select(r => r.Persona).Cast<Persona>().ToList().Contains(roundPersonaCandidate))
                 {
                     trustExchangeRounds.Add(new TrustExchangeRound(roundPersonaCandidate));
                 }
             }
 
-            TrustExchangePersonaResponseLogic =
+            Func<List<TrustExchangeRound>, TrustExchangeRound, PersonaClassification> responseLogic =
                 (rounds, currentRound) =>
                 {
                     int cooperators = 0;
                     int defectors = 0;
 
                     //currentRound.PersonaGivesPoint
+                    throw new NotImplementedException();
                 };
 
-            TrustExchangeTask = new TrustExchangeTask(trustExchangeRounds, TrustExchangePersonaResponseLogic);
+            TrustExchangeTask = new TrustExchangeTask(trustExchangeRounds, responseLogic);
         }
 
     }
