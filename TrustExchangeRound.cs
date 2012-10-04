@@ -3,30 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SocialExchange
+namespace SocialExchange.Tasks
 {
-    public class TrustExchangeRound : Round
+    public partial class TrustExchangeTask
     {
-        protected TrustExchange TrustExchange { get; set; }
-
-        public TrustExchangeRound(Persona persona) : base(persona)
+        public class Round : Rounds.Round
         {
-            TrustExchange = new TrustExchange();
-        }
+            public TrustExchange TrustExchange { get; protected set; }
 
-        public int PlayerGivesPoint()
-        {
-            return TrustExchange.PlayerGivesPoint();
-        }
+            public Round(Persona persona, Func<PersonaClassification> personaResponseLogic)
+                : base(persona)
+            {
+                TrustExchange = new TrustExchange(personaResponseLogic);                
+            }
 
-        public int PersonaGivesPoint()
-        {
-            return TrustExchange.PersonaGivesPoint();
-        }
-
-        public void SetOutcome(PersonaClassification personaClassification)
-        {
-            TrustExchange.PersonaClassification = personaClassification;
+            public void PlayerGivesPoint()
+            {
+                TrustExchange.PlayerGivesPoint();
+            }
         }
     }
 }

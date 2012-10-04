@@ -9,18 +9,23 @@ namespace SocialExchange
     {
         public int PlayerToPersonaRawPoints { get; protected set; }
         public int PersonaToPlayerRawPoints { get; protected set; }
-        public PersonaClassification PersonaClassification { get; set; }
+        public PersonaClassification PersonaClassification { get; protected set; }
+        public Func<PersonaClassification> PersonaResponseLogic { get; protected set; }
 
-        public TrustExchange()
+        public TrustExchange(Func<PersonaClassification> personaResponseLogic)
         {
             PlayerToPersonaRawPoints = 0;
             PersonaToPlayerRawPoints = 0;
             PersonaClassification = PersonaClassifications.UNINITIALIZED;
+            PersonaResponseLogic = personaResponseLogic;
         }
 
-        public int PlayerGivesPoint()
+        public void PlayerGivesPoint()
         {
-            return (PlayerToPersonaRawPoints++);
+            PlayerToPersonaRawPoints++;
+            PersonaClassification = PersonaResponseLogic();
+            PersonaToPlayerRawPoints += 
+                (PersonaClassification == PersonaClassifications.COOPERATOR ? 1 : 0);
         }
 
         public int PersonaGivesPoint()

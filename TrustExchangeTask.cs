@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SocialExchange
+namespace SocialExchange.Tasks
 {
-    public class TrustExchangeTask /*: ITimestamped*/
+    public partial class TrustExchangeTask
     {
-        public List<TrustExchangeRound> Rounds { get; protected set; }
+        protected List<Round> _rounds = null;
+        public IList<Round> Rounds { get { return _rounds.AsReadOnly(); } }
 
         public DateTime BeginTimestamp { get; protected set; }
         public DateTime EndTimestamp { get; protected set; }
 
-        public int RoundCount { get; protected set; }
         public int CurrentRoundIndex { get; protected set; }
-        public TrustExchangeRound CurrentRound 
+        public Round CurrentRound 
         { 
             get 
             { 
@@ -28,22 +28,15 @@ namespace SocialExchange
             } 
         }
 
-        public Func<List<TrustExchangeRound>, TrustExchangeRound, PersonaClassification> PersonaTrustExchangeLogic { get; protected set; }
+        public Func<PersonaClassification> PersonaResponseLogic { get { return ExecutePersonaResponse; } }
 
-        public TrustExchangeTask(
-            List<TrustExchangeRound> rounds,
-            Func<List<TrustExchangeRound>, TrustExchangeRound, PersonaClassification> personaTrustExchangeLogic
-            )
+        public TrustExchangeTask(List<Round> rounds)
         {
-            Rounds = rounds;
-            Rounds.TrimExcess();
-            RoundCount = rounds.Count;
+            _rounds = rounds;
             CurrentRoundIndex = 0;
-
-            PersonaTrustExchangeLogic = personaTrustExchangeLogic;
         }
 
-        protected TrustExchangeRound Advance()
+        protected Round Advance()
         {
             int nextRountIndex = CurrentRoundIndex + 1;
 
@@ -59,22 +52,32 @@ namespace SocialExchange
             return CurrentRound;
         }
 
-        protected PersonaClassification TriggerPersonaResponse()
+        public PersonaClassification PlayerGivesPoint()
         {
+            CurrentRound.PlayerGivesPoint();
+
+            PersonaClassification response = ExecutePersonaResponse();
+
             EndTimestamp =
                 CurrentRoundIndex == Rounds.Count - 1 ?
                 DateTime.Now :
                 default(DateTime);
 
-            return 
-                PersonaTrustExchangeLogic(Rounds, CurrentRound);
+            return response;
         }
 
-        public PersonaClassification PlayerGivesPoint()
+        private PersonaClassification ExecutePersonaResponse()
         {
-            CurrentRound.PlayerGivesPoint();
+            int cooperators = Rounds.Where(r => r.TrustExchange.PersonaClassification == PersonaClassifications.COOPERATOR).Count();
+            int defectors = Rounds.Where(r => r.TrustExchange.PersonaClassification == PersonaClassifications.DEFECTOR).Count();
 
-            return TriggerPersonaResponse();
+            PersonaClassification[] options = 
+                new PersonaClassification[] { PersonaClassifications.COOPERATOR, PersonaClassifications.DEFECTOR};
+
+            return
+                cooperators > defectors ? PersonaClassifications.DEFECTOR :
+                cooperators < defectors ? PersonaClassifications.COOPERATOR :
+                options[new Random().Next(1, options.Count())];
         }
     }
 }

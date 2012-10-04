@@ -10,9 +10,8 @@ namespace SocialExchangeConsole
 {
     class Program
     {
-        public static int trustExchangeRoundCount = 24;
         public static bool logicEngineIsRunning = true;
-        public static LogicEngine LogicEngine = new LogicEngine(trustExchangeRoundCount);
+        public static LogicEngine LogicEngine = new LogicEngine();
 
         static void Main(string[] args)
         {
@@ -37,7 +36,7 @@ namespace SocialExchangeConsole
 
         private static void InTrustExchangeTaskOutputCurrentRoundInfo()
         {
-            Console.WriteLine(string.Format("ROUND {0} / {1}:", LogicEngine.TrustExchangeTask.CurrentRoundIndex, trustExchangeRoundCount));
+            Console.WriteLine(string.Format("ROUND {0} / {1}:", LogicEngine.TrustExchangeTask.CurrentRoundIndex, LogicEngine.TrustExchangeTask.Rounds.Count));
             Console.WriteLine(string.Format("PERSONA: {0}", LogicEngine.TrustExchangeTask.CurrentRound.Persona.Filename));
         }
 

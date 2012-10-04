@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using SocialExchange.Tasks;
 
 namespace SocialExchange
 {
@@ -12,15 +13,13 @@ namespace SocialExchange
     {
         public List<Persona> Personas { get; protected set; }
         public TrustExchangeTask TrustExchangeTask { get; protected set; }
+        public Func<PersonaClassification> PersonaResponseLogic { get; protected set; }
+        public int TrustExchangeTaskRoundcount = 24;
 
-        public LogicEngine(int trustExchangeRoundCount)
+        public LogicEngine()
         {
             InitializePersonas();
-            InitializeTrustExchange(trustExchangeRoundCount);
-        }
-
-        private void InitializeTrustExchangePersonaResponseLogic()
-        {
+            InitializeTrustExchangeTask();
         }
 
         private void InitializePersonas()
@@ -42,31 +41,20 @@ namespace SocialExchange
                 .ToList();
         }
 
-        private void InitializeTrustExchange(int roundCount)
+        private void InitializeTrustExchangeTask()
         {
-            List<TrustExchangeRound> trustExchangeRounds = new List<TrustExchangeRound>(roundCount);
+            List<TrustExchangeTask.Round> rounds = new List<TrustExchangeTask.Round>(TrustExchangeTaskRoundcount);
 
-            Random random = new Random();
-            while (trustExchangeRounds.Count < roundCount)
+            TrustExchangeTask = new TrustExchangeTask(rounds);
+
+            while (rounds.Count < TrustExchangeTaskRoundcount)
             {
-                Persona roundPersonaCandidate = Personas[random.Next(0, roundCount)];
-                if (!trustExchangeRounds.Select(r => r.Persona).Cast<Persona>().ToList().Contains(roundPersonaCandidate))
+                Persona roundPersonaCandidate = Personas[new Random().Next(0, Personas.Count - 1)];
+                if (!rounds.Select(r => r.Persona).Cast<Persona>().ToList().Contains(roundPersonaCandidate))
                 {
-                    trustExchangeRounds.Add(new TrustExchangeRound(roundPersonaCandidate));
+                    rounds.Add(new TrustExchangeTask.Round(roundPersonaCandidate, TrustExchangeTask.PersonaResponseLogic));
                 }
             }
-
-            Func<List<TrustExchangeRound>, TrustExchangeRound, PersonaClassification> responseLogic =
-                (rounds, currentRound) =>
-                {
-                    int cooperators = 0;
-                    int defectors = 0;
-
-                    //currentRound.PersonaGivesPoint
-                    throw new NotImplementedException();
-                };
-
-            TrustExchangeTask = new TrustExchangeTask(trustExchangeRounds, responseLogic);
         }
 
     }

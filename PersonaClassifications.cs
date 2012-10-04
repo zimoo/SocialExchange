@@ -8,7 +8,7 @@ namespace SocialExchange
     public static class PersonaClassifications
     {
         public static readonly PersonaClassification UNINITIALIZED = new PersonaClassification("UNINITIALIZED");
-        public static readonly PersonaClassification CHEATER = new PersonaClassification("CHEATER");
+        public static readonly PersonaClassification DEFECTOR = new PersonaClassification("DEFECTOR");
         public static readonly PersonaClassification COOPERATOR = new PersonaClassification("COOPERATOR");
         public static readonly PersonaClassification NOVEL = new PersonaClassification("NOVEL");
     }
