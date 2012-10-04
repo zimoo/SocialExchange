@@ -16,7 +16,7 @@ namespace SocialExchange
         {
             PlayerToPersonaRawPoints = 0;
             PersonaToPlayerRawPoints = 0;
-            PersonaClassification = PersonaClassifications.UNINITIALIZED;
+            PersonaClassification = PersonaClassifications.INDETERMINATE;
             PersonaResponseLogic = personaResponseLogic;
         }
 

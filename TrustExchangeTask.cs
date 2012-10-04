@@ -28,26 +28,18 @@ namespace SocialExchange.Tasks
             } 
         }
 
-        public Func<PersonaClassification> PersonaResponseLogic { get { return ExecutePersonaResponse; } }
-
         public TrustExchangeTask(List<Round> rounds)
         {
             _rounds = rounds;
             CurrentRoundIndex = 0;
         }
 
-        protected Round Advance()
+        public Round Advance()
         {
-            int nextRountIndex = CurrentRoundIndex + 1;
-
-            if (nextRountIndex >= Rounds.Count)
-            {
-                throw new InvalidOperationException("Cannot advance past final round.");
-            }
-            else
-            {
-                CurrentRoundIndex++;
-            }
+            CurrentRoundIndex = 
+                (CurrentRoundIndex >= 0) && (CurrentRoundIndex + 1 < Rounds.Count) ?
+                CurrentRoundIndex + 1 :
+                CurrentRoundIndex;
 
             return CurrentRound;
         }
@@ -56,28 +48,12 @@ namespace SocialExchange.Tasks
         {
             CurrentRound.PlayerGivesPoint();
 
-            PersonaClassification response = ExecutePersonaResponse();
-
             EndTimestamp =
                 CurrentRoundIndex == Rounds.Count - 1 ?
                 DateTime.Now :
                 default(DateTime);
 
-            return response;
-        }
-
-        private PersonaClassification ExecutePersonaResponse()
-        {
-            int cooperators = Rounds.Where(r => r.TrustExchange.PersonaClassification == PersonaClassifications.COOPERATOR).Count();
-            int defectors = Rounds.Where(r => r.TrustExchange.PersonaClassification == PersonaClassifications.DEFECTOR).Count();
-
-            PersonaClassification[] options = 
-                new PersonaClassification[] { PersonaClassifications.COOPERATOR, PersonaClassifications.DEFECTOR};
-
-            return
-                cooperators > defectors ? PersonaClassifications.DEFECTOR :
-                cooperators < defectors ? PersonaClassifications.COOPERATOR :
-                options[new Random().Next(1, options.Count())];
+            return CurrentRound.TrustExchange.PersonaClassification;
         }
     }
 }

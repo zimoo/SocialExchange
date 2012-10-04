@@ -52,7 +52,24 @@ namespace SocialExchange
                 Persona roundPersonaCandidate = Personas[new Random().Next(0, Personas.Count - 1)];
                 if (!rounds.Select(r => r.Persona).Cast<Persona>().ToList().Contains(roundPersonaCandidate))
                 {
-                    rounds.Add(new TrustExchangeTask.Round(roundPersonaCandidate, TrustExchangeTask.PersonaResponseLogic));
+                    rounds.Add(
+                        new TrustExchangeTask.Round(
+                            roundPersonaCandidate,
+                            () =>
+                            {
+                                int cooperators = TrustExchangeTask.Rounds.Where(r => r.TrustExchange.PersonaClassification == PersonaClassifications.COOPERATOR).Count();
+                                int defectors = TrustExchangeTask.Rounds.Where(r => r.TrustExchange.PersonaClassification == PersonaClassifications.DEFECTOR).Count();
+
+                                PersonaClassification[] options =
+                                    new PersonaClassification[] { PersonaClassifications.COOPERATOR, PersonaClassifications.DEFECTOR };
+
+                                return
+                                    cooperators > defectors ? PersonaClassifications.DEFECTOR :
+                                    cooperators < defectors ? PersonaClassifications.COOPERATOR :
+                                    options[new Random().Next(1, options.Count())];
+                            }
+                        )
+                    );
                 }
             }
         }
