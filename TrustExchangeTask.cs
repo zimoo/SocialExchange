@@ -44,9 +44,16 @@ namespace SocialExchange.Tasks
             return CurrentRound;
         }
 
-        public PersonaClassification PlayerGivesPoint()
+        public PersonaClassification PlayerSubmits(bool givesPoint)
         {
-            CurrentRound.PlayerGivesPoint();
+            if(givesPoint)
+            {
+                CurrentRound.PlayerGivesPointToPersona();
+            }
+            else
+            {
+                CurrentRound.PlayerSkipsPersona();
+            }
 
             EndTimestamp =
                 CurrentRoundIndex == Rounds.Count - 1 ?
@@ -54,6 +61,11 @@ namespace SocialExchange.Tasks
                 default(DateTime);
 
             return CurrentRound.TrustExchange.PersonaClassification;
+        }
+
+        public int GetCount(PersonaClassification classification)
+        {
+            return Rounds.Where(r => r.TrustExchange.PersonaClassification == classification).Count();
         }
     }
 }

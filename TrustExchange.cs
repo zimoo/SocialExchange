@@ -20,12 +20,17 @@ namespace SocialExchange
             PersonaResponseLogic = personaResponseLogic;
         }
 
-        public void PlayerGivesPoint()
+        public void PlayerGivesPointToPersona()
         {
             PlayerToPersonaRawPoints++;
             PersonaClassification = PersonaResponseLogic();
-            PersonaToPlayerRawPoints += 
+            PersonaToPlayerRawPoints +=
                 (PersonaClassification == PersonaClassifications.COOPERATOR ? 1 : 0);
+        }
+
+        public void PlayerSkipsPersona()
+        {
+            PersonaClassification = PersonaClassifications.SKIPPED;
         }
 
         public int PersonaGivesPoint()

@@ -22,52 +22,33 @@ namespace SocialExchangeConsole
         {
             while (LogicEngine.TrustExchangeTask.CurrentRoundIndex < LogicEngine.TrustExchangeTask.Rounds.Count)
             {
-                InTrustExchangeTaskOutputCurrentRoundInfo();
-                InTrustExchangeTaskPromptPlayerToGivePoint();
-                InTrustExchangeTaskProcessPlayerGivesPointInput();
-                InTrustExchangeTaskOutputCurrentRoundPersonaResponse();
+                Console.WriteLine(string.Format("ROUND {0} / {1}:", LogicEngine.TrustExchangeTask.CurrentRoundIndex + 1, LogicEngine.TrustExchangeTask.Rounds.Count));
+                Console.WriteLine(string.Format("PERSONA: {0}", LogicEngine.TrustExchangeTask.CurrentRound.Persona.Filename));
 
-                if (LogicEngine.TrustExchangeTask.CurrentRoundIndex < LogicEngine.TrustExchangeTask.Rounds.Count - 1)
-                {
-                    InTrustExchangeTaskAdvanceToNextRound();
-                }
-                else
+                Console.Write("Give points? (Y/N) ");
+
+                bool playerInput = Console.In.ReadLine().StartsWith("Y", true, CultureInfo.InvariantCulture);
+
+                LogicEngine.TrustExchangeTask.PlayerSubmits(playerInput);
+
+                Console.WriteLine(string.Format("RESPONSE: {0}", LogicEngine.TrustExchangeTask.CurrentRound.TrustExchange.PersonaClassification.Value));
+                Console.WriteLine();
+
+                if(LogicEngine.TrustExchangeTask.CurrentRoundIndex == LogicEngine.TrustExchangeTask.Rounds.Count - 1)
                 {
                     break;
                 }
+                else
+                {
+                    LogicEngine.AdvanceTrustExchangeRound();
+                }
             }
-        }
 
-        private static void InTrustExchangeTaskOutputCurrentRoundInfo()
-        {
-            Console.WriteLine(string.Format("ROUND {0} / {1}:", LogicEngine.TrustExchangeTask.CurrentRoundIndex + 1, LogicEngine.TrustExchangeTask.Rounds.Count));
-            Console.WriteLine(string.Format("PERSONA: {0}", LogicEngine.TrustExchangeTask.CurrentRound.Persona.Filename));
-        }
-
-        private static void InTrustExchangeTaskPromptPlayerToGivePoint()
-        {
-            Console.Write("Give points? (Y/N) ");
-        }
-
-        private static void InTrustExchangeTaskProcessPlayerGivesPointInput()
-        {
-            bool playerGivesPoint = Console.In.ReadLine().StartsWith("Y", true, CultureInfo.InvariantCulture);
-
-            if(playerGivesPoint)
-            {
-                LogicEngine.TrustExchangeTask.PlayerGivesPoint();
-            }
-        }
-
-        private static void InTrustExchangeTaskOutputCurrentRoundPersonaResponse()
-        {
-            Console.WriteLine(string.Format("RESPONSE: {0}", LogicEngine.TrustExchangeTask.CurrentRound.TrustExchange.PersonaClassification.Value));
-            Console.WriteLine();
-        }
-
-        private static void InTrustExchangeTaskAdvanceToNextRound()
-        {
-            LogicEngine.TrustExchangeTask.Advance();
+            Console.WriteLine(string.Format("TOTAL COOPERATORS: {0}", LogicEngine.TrustExchangeTask.GetCount(PersonaClassifications.COOPERATOR)));
+            Console.WriteLine(string.Format("TOTAL DEFECTORS:   {0}", LogicEngine.TrustExchangeTask.GetCount(PersonaClassifications.DEFECTOR)));
+            Console.WriteLine(string.Format("TOTAL SKIPPED:   {0}", LogicEngine.TrustExchangeTask.GetCount(PersonaClassifications.SKIPPED)));
+            Console.WriteLine(string.Format("TOTAL INDETERMINATE:   {0}", LogicEngine.TrustExchangeTask.GetCount(PersonaClassifications.INDETERMINATE)));
+            Console.WriteLine(string.Format("TOTAL NOVEL:   {0}", LogicEngine.TrustExchangeTask.GetCount(PersonaClassifications.NOVEL)));
         }
     }
 }

@@ -17,9 +17,14 @@ namespace SocialExchange.Tasks
                 TrustExchange = new TrustExchange(personaResponseLogic);                
             }
 
-            public void PlayerGivesPoint()
+            public void PlayerGivesPointToPersona()
             {
-                TrustExchange.PlayerGivesPoint();
+                TrustExchange.PlayerGivesPointToPersona();
+            }
+
+            public void PlayerSkipsPersona()
+            {
+                TrustExchange.PlayerSkipsPersona();
             }
         }
     }
